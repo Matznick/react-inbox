@@ -9,30 +9,23 @@ class Message extends Component {
       read: this.props.message.read,
       starred: this.props.message.starred,
       labels: this.props.message.labels,
-      selectedByClick: false,
-      selectedByToolbar: this.props.allMessagesSelected,
+      selected: this.props.message.selected,
     };
+  }
+
+  componentDidUpdate() {
+    if (!this.state.selected) {
+      this.setState({ ...this.state, selected: this.props.message.selected });
+    }
   }
 
   // distiguish between selected/not selected and read/unread
   setMessageStyle = () => {
-    console.log(
-      "from message.js: selectedbyclick :",
-      this.state.selectedByClick
-    );
-    console.log(
-      "from message.js: selectedbytoolbar :",
-      this.state.selectedByToolbar
-    );
-    if (
-      (this.state.selectedByClick && this.state.read) ||
-      (this.props.allMessagesSelected && this.state.read)
-    ) {
+    console.log("from message.js: selectedbyclick :", this.state.selected);
+
+    if (this.state.selected && this.state.read) {
       return "row message selected read";
-    } else if (
-      (this.state.selectedByClick && !this.state.read) ||
-      (this.props.allMessagesSelected && !this.state.read)
-    ) {
+    } else if (this.state.selected && !this.state.read) {
       return "row message selected unread";
     }
     if (this.state.read) {
@@ -42,12 +35,11 @@ class Message extends Component {
     }
   };
 
-  toggleCheckbox = () =>
-    this.setState({ selectedByClick: !this.state.selectedByClick });
+  toggleCheckbox = () => this.setState({ selected: !this.state.selected });
 
   onClickCheckbox = () => {
     this.toggleCheckbox();
-    console.log("selectedByClick: ", this.state.selectedByClick);
+    console.log("selected: ", this.state.selected);
     this.setMessageStyle();
   };
 
@@ -63,9 +55,7 @@ class Message extends Component {
                 <input
                   onClick={this.onClickCheckbox}
                   type="checkbox"
-                  checked={
-                    this.state.selectedByToolbar || this.state.selectedByClick
-                  }
+                  checked={this.props.message.selected}
                 />
               </div>
               <div className="col-xs-1">

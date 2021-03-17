@@ -12,6 +12,7 @@ class App extends Component {
           "You can't input the protocol without calculating the mobile RSS protocol!",
         read: false,
         starred: true,
+        selected: false,
         labels: ["dev", "personal"],
       },
       {
@@ -29,6 +30,7 @@ class App extends Component {
           "Use the 1080p HTTP feed, then you can parse the cross-platform hard drive!",
         read: false,
         starred: true,
+        selected: false,
         labels: ["dev"],
       },
       {
@@ -45,6 +47,7 @@ class App extends Component {
           "If we override the interface, we can get to the HTTP feed through the virtual EXE interface!",
         read: false,
         starred: false,
+        selected: false,
         labels: ["personal"],
       },
       {
@@ -52,6 +55,7 @@ class App extends Component {
         subject: "We need to back up the wireless GB driver!",
         read: true,
         starred: true,
+        selected: false,
         labels: [],
       },
       {
@@ -59,6 +63,7 @@ class App extends Component {
         subject: "We need to index the mobile PCI bus!",
         read: true,
         starred: false,
+        selected: false,
         labels: ["dev", "personal"],
       },
       {
@@ -67,23 +72,36 @@ class App extends Component {
           "If we connect the sensor, we can get to the HDD port through the redundant IB firewall!",
         read: true,
         starred: true,
+        selected: false,
         labels: [],
       },
     ],
     allMessagesSelected: false,
   };
 
-  selectAllMessages = () => {
+  selectAllMessages = (all = false) => {
     this.setState({ allMessagesSelected: !this.state.allMessagesSelected });
+    let selectedMessages = [];
+    let newArray = selectedMessages.concat(this.state.seedMessages);
+    newArray.map((m) => {
+      if (all) {
+        return { ...m, selected: true };
+      } else {
+        return { ...m, selected: !m.selected };
+      }
+    });
+    console.log(newArray);
+    this.setState({ seedsMessages: selectedMessages });
   };
 
-  markAsRead = () => {
-    if (this.state.allMessagesSelected) {
-      let readMessages = this.state.seedMessages;
-      readMessages.map((m) => (m.read = true));
-      this.setState({ seedMessages: readMessages });
-    }
-  };
+  // markAsRead = () => {
+  //   if (this.state.allMessagesSelected) {
+  //     let readMessages = this.state.seedMessages;
+  //     readMessages.map((m) => (m.read = true));
+  //     this.setState({ seedMessages: readMessages });
+  //     //this.setState({ allMessagesSelected: this.state.allMessagesSelected });
+  //   }
+  // };
 
   render() {
     return (

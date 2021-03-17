@@ -12,7 +12,7 @@ class Toolbar extends Component {
             </p>
 
             <button
-              onClick={this.props.selectAllMessages}
+              onClick={this.props.selectAllMessages.bind(true)}
               className="btn btn-default"
             >
               <i
@@ -24,11 +24,17 @@ class Toolbar extends Component {
               ></i>
             </button>
 
-            <button onClick={this.props.markAsRead} className="btn btn-default">
+            <button
+              //   onClick={this.props.markAsRead()}
+              className="btn btn-default"
+            >
               Mark As Read
             </button>
 
-            <button className="btn btn-default" disabled="disabled">
+            <button
+              //   onClick={this.props.markAsRead(false)}
+              className="btn btn-default"
+            >
               Mark As Unread
             </button>
 
