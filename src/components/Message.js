@@ -10,9 +10,15 @@ class Message extends Component {
       starred: this.props.message.starred,
       labels: this.props.message.labels,
       selectedByClick: false,
-      selectedByToolbar: this.props.allMessagesSelected,
+      isSelectingByClick: false,
     };
   }
+
+  // componentDidUpdate(){
+  //   if (!this.state.isSelectingByClick){
+  //     this.setState({...this.state, isSelectingByClick: true, selectedByClick: !this.state.selectedByClick});
+  //   }
+  // }
 
   // distiguish between selected/not selected and read/unread
   setMessageStyle = () => {
@@ -20,10 +26,7 @@ class Message extends Component {
       "from message.js: selectedbyclick :",
       this.state.selectedByClick
     );
-    console.log(
-      "from message.js: selectedbytoolbar :",
-      this.state.selectedByToolbar
-    );
+   
     if (
       (this.state.selectedByClick && this.state.read) ||
       (this.props.allMessagesSelected && this.state.read)
@@ -42,12 +45,11 @@ class Message extends Component {
     }
   };
 
-  toggleCheckbox = () =>
-    this.setState({ selectedByClick: !this.state.selectedByClick });
+  toggleCheckbox = () => this.props.selectMessages(false,true, this.state.id)
+    //this.setState({ selectedByClick: !this.state.selectedByClick });
 
   onClickCheckbox = () => {
     this.toggleCheckbox();
-    console.log("selectedByClick: ", this.state.selectedByClick);
     this.setMessageStyle();
   };
 
@@ -61,10 +63,10 @@ class Message extends Component {
             <div className="row">
               <div className="col-xs-1">
                 <input
-                  onClick={this.onClickCheckbox}
+                  onChange={this.onClickCheckbox}
                   type="checkbox"
                   checked={
-                    this.state.selectedByToolbar || this.state.selectedByClick
+                    this.props.message.selected
                   }
                 />
               </div>
@@ -79,8 +81,8 @@ class Message extends Component {
                 ></i>
               </div>
               <div className="col-xs-1">
-                {this.state.labels.map((label) => (
-                  <div className="label"> {label} </div>
+                {this.state.labels.map((label,i) => (
+                  <div key={i} className="label"> {label} </div>
                 ))}
               </div>
             </div>

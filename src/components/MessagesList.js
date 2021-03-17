@@ -7,11 +7,12 @@ class MessagesList extends Component {
   render() {
     return (
       <div>
-        {this.props.seedMessages.map((message) => (
+        {this.props.seedMessages.map((message,i) => (
           <div>
             <Message
+              key={i}
               message={message}
-              allMessagesSelected={this.props.allMessagesSelected}
+              selectMessages = {this.props.selectMessages}
             />
           </div>
         ))}
