@@ -79,19 +79,45 @@ class App extends Component {
     allMessagesSelected: false,
   };
 
-  selectAllMessages = (all = false) => {
-    this.setState({ allMessagesSelected: !this.state.allMessagesSelected });
+  selectMessages = (all = false, one_only = false, id = null) => {
+    if (one_only) {
+      const found = this.state.seedMessages.find((m) => m.id == id);
+      if (found) {
+        // grab where we found the target item
+        const the_index = this.state.seedMessages.indexOf(found);
+
+        // make a new array to work on since we don't mutate state on state
+        const new_messages_array = [];
+        const final_messages = new_messages_array.concat(
+          this.state.seedMessages
+        );
+
+        // construct the new object with the toggle in place
+        const new_message = { ...found, selected: !found.selected };
+
+        // insert the new object in the array
+        final_messages[the_index] = new_message;
+
+        // update the state to have the new array with the new object.
+        this.setState({ seedMessages: final_messages });
+      }
+      return;
+    }
+
     let selectedMessages = [];
-    let newArray = selectedMessages.concat(this.state.seedMessages);
-    newArray.map((m) => {
-      if (all) {
+    selectedMessages = selectedMessages.concat(this.state.seedMessages);
+    const allAreChecked = selectedMessages.every((m) => m.selected == true);
+    const allAreNotChecked = selectedMessages.find((m) => m.selected == false);
+    let newMessagesArray = selectedMessages.map((m) => {
+      if (all && allAreChecked) {
+        return { ...m, selected: false };
+      } else if (all && allAreNotChecked) {
         return { ...m, selected: true };
       } else {
-        return { ...m, selected: !m.selected };
+        return { ...m, selected: true };
       }
     });
-    console.log(newArray);
-    this.setState({ seedsMessages: selectedMessages });
+    this.setState({ seedMessages: newMessagesArray });
   };
 
   // markAsRead = () => {

@@ -10,13 +10,8 @@ class Message extends Component {
       starred: this.props.message.starred,
       labels: this.props.message.labels,
       selected: this.props.message.selected,
+      isSelectingByClick: false,
     };
-  }
-
-  componentDidUpdate() {
-    if (!this.state.selected) {
-      this.setState({ ...this.state, selected: this.props.message.selected });
-    }
   }
 
   // distiguish between selected/not selected and read/unread
@@ -35,11 +30,10 @@ class Message extends Component {
     }
   };
 
-  toggleCheckbox = () => this.setState({ selected: !this.state.selected });
+  toggleCheckbox = () => this.props.selectMessages(false, true, this.state.id);
 
   onClickCheckbox = () => {
     this.toggleCheckbox();
-    console.log("selected: ", this.state.selected);
     this.setMessageStyle();
   };
 
@@ -71,8 +65,7 @@ class Message extends Component {
               <div className="col-xs-1">
                 {this.state.labels.map((label, i) => (
                   <div key={i} className="label">
-                    {" "}
-                    {label}{" "}
+                    {label}
                   </div>
                 ))}
               </div>
