@@ -53,7 +53,7 @@ class Message extends Component {
             <div className="row">
               <div className="col-xs-1">
                 <input
-                  onClick={this.onClickCheckbox}
+                  onChange={this.onClickCheckbox}
                   type="checkbox"
                   checked={this.props.message.selected}
                 />
@@ -69,8 +69,11 @@ class Message extends Component {
                 ></i>
               </div>
               <div className="col-xs-1">
-                {this.state.labels.map((label) => (
-                  <div className="label"> {label} </div>
+                {this.state.labels.map((label, i) => (
+                  <div key={i} className="label">
+                    {" "}
+                    {label}{" "}
+                  </div>
                 ))}
               </div>
             </div>

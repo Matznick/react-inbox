@@ -12,7 +12,7 @@ class Toolbar extends Component {
             </p>
 
             <button
-              onClick={this.props.selectAllMessages.bind(true)}
+              onClick={this.props.selectAllMessages(true)}
               className="btn btn-default"
             >
               <i

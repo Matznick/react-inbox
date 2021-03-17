@@ -107,13 +107,14 @@ class App extends Component {
     return (
       <div className="App">
         <Toolbar
-          selectAllMessages={this.selectAllMessages}
+          selectMessages={this.selectMessages}
           allMessagesSelected={this.state.allMessagesSelected}
           markAsRead={this.markAsRead}
         />
         <MessagesList
           seedMessages={this.state.seedMessages}
-          key={this.state.allMessagesSelected}
+          selectMessages={this.selectMessages}
+          key={this.seedMessages}
           allMessagesSelected={this.state.allMessagesSelected}
         />
       </div>
