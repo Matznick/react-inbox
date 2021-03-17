@@ -100,6 +100,8 @@ class App extends Component {
 
         // update the state to have the new array with the new object.
         this.setState({ seedMessages: final_messages });
+        console.log("this.state.seedMessages", this.state.seedMessages);
+        console.log("final_messages", final_messages);
       }
       return;
     }
@@ -118,6 +120,8 @@ class App extends Component {
       }
     });
     this.setState({ seedMessages: newMessagesArray });
+    console.log("this.state.seedMessages", this.state.seedMessages);
+    console.log("final_messages", newMessagesArray);
   };
 
   // markAsRead = () => {
