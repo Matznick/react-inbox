@@ -1,3 +1,4 @@
+
 .App {
   text-align: center;
 }
@@ -35,4 +36,111 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.message {
+  margin-left: 0px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  cursor: pointer;
+  border: 1px solid #efefef;
+  position: relative;
+}
+
+.message a {
+  color: black;
+  left: 0;
+
+}
+
+.message a:hover, .message a:active, .message a:focus {
+  text-decoration: none;
+}
+
+.message + .message {
+  border-top: 1px solid #efefef;
+}
+
+.message.read {
+  background: #efefef;
+}
+
+.message.unread {
+  font-weight: bold;
+}
+
+.message.selected.unread {
+  background: #ffffcc;
+  font-weight: bold;
+}
+
+.message.selected.read {
+  background: #ffffcc;
+}
+
+.message:hover {
+  margin-left: -3px;
+  border-left: 3px solid #ccc;
+}
+
+.message-body {
+  background: #ccc;
+  margin-left: 0;
+  margin-bottom: 1em;
+  padding-top: 1em;
+  padding-bottom: 1em;
+}
+
+.toolbar {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+.toolbar .label-select {
+  width: auto;
+  display: inline;
+}
+
+.toolbar select,
+.toolbar button,
+.toolbar a,
+.toolbar .badge {
+  margin-right: .5em;
+  margin-bottom: .5em;
+}
+
+footer.spacer {
+  margin-bottom: 20em;
+}
+
+.label {
+  margin-right: .5em;
+}
+
+.fa-close {
+  cursor: pointer;
+}
+
+.label{
+  margin-right: 5px;
+  margin-left: 5px;
+  background-color: orange;
+  color: white;
+}
+
+.message-container{
+  width: 1000px;
+  display: inline-block;
+  flex-direction: row;
+  align-items: flex;
+}
+
+
+
+
+
+
+.col-xs-9 {
+    width: 75%;
+    text-align: left;
 }
