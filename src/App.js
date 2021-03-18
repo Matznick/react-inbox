@@ -132,12 +132,22 @@ class App extends Component {
   };
 
   deleteMessage = () => {
-    let readMessages = [];
-    readMessages = readMessages.concat(this.state.seedMessages);
+    let messages = [];
+    messages = messages.concat(this.state.seedMessages);
     let newArray = [];
-    newArray = newArray.concat(readMessages.filter((m) => !m.selected));
+    newArray = newArray.concat(messages.filter((m) => !m.selected));
     console.log("newArray from delete: ", newArray);
     this.setState({ seedMessages: newArray });
+  };
+
+  countUnreadMessages = () => {
+    let messages = [];
+    messages = messages.concat(this.state.seedMessages);
+    const numberOfUnread = messages.reduce((acc, curr) => {
+      return acc + (curr.read === false ? 1 : 0);
+    }, 0);
+    console.log("numberOfUnread: ", numberOfUnread);
+    return numberOfUnread;
   };
 
   render() {
@@ -147,6 +157,7 @@ class App extends Component {
           selectMessages={this.selectMessages}
           markAsRead={this.markAsRead}
           deleteMessage={this.deleteMessage}
+          countUnreadMessages={this.countUnreadMessages}
         />
         <MessagesList
           seedMessages={this.state.seedMessages}
