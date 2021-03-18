@@ -76,7 +76,6 @@ class App extends Component {
         labels: [],
       },
     ],
-    allMessagesSelected: false, // delete all occurances
   };
 
   selectMessages = (all = false, one_only = false, id = null) => {
@@ -100,8 +99,6 @@ class App extends Component {
 
         // update the state to have the new array with the new object.
         this.setState({ seedMessages: final_messages });
-        console.log("this.state.seedMessages", this.state.seedMessages);
-        console.log("final_messages", final_messages);
       }
       return;
     }
@@ -120,19 +117,16 @@ class App extends Component {
       }
     });
     this.setState({ seedMessages: newMessagesArray });
-    console.log("this.state.seedMessages", this.state.seedMessages);
-    console.log("final_messages", newMessagesArray);
   };
 
-  markAsRead = () => {
+  markAsRead = (param) => {
+    console.log("param ", param);
     let readMessages = [];
     readMessages = readMessages.concat(this.state.seedMessages);
-    // replace all messages that are .selected: true in the array with new messages with their .read: true
     let newArray = [];
     newArray = newArray.concat(
-      readMessages.map((m) => (m = m.selected ? (m = { ...m, read: true }) : m))
+      readMessages.map((m) => (m.selected ? { ...m, read: param } : m))
     );
-    console.log("newArray: ", newArray);
 
     this.setState({ seedMessages: newArray });
   };
@@ -142,14 +136,12 @@ class App extends Component {
       <div className="App">
         <Toolbar
           selectMessages={this.selectMessages}
-          allMessagesSelected={this.state.allMessagesSelected}
           markAsRead={this.markAsRead}
         />
         <MessagesList
           seedMessages={this.state.seedMessages}
           selectMessages={this.selectMessages}
           key={this.seedMessages}
-          allMessagesSelected={this.state.allMessagesSelected}
         />
       </div>
     );

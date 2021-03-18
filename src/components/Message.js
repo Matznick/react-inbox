@@ -24,10 +24,6 @@ class Message extends Component {
     }
   };
 
-  componentDidUpdate() {
-    console.log("message updated, new state: ", this.state.selected);
-  }
-
   toggleCheckbox = () => {
     this.props.selectMessages(false, true, this.state.id);
   };
