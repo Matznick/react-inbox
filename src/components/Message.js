@@ -34,7 +34,7 @@ class Message extends Component {
   };
 
   onClickStar = () => this.setState({ starred: !this.state.starred });
-  // noch falsch, muss auch in den state der app
+  // noch falsch, muss eigentlich auch in den state der app, ABER: wird für nichts benutzt, deshlab (noch) keine Auswrikung
 
   render() {
     return (

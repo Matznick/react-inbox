@@ -2,8 +2,14 @@ import React, { Component } from "react";
 
 class Toolbar extends Component {
   handleSelection = (e) => {
-    this.props.addLabelToMessage(e.target.value);
-    e.target.selectedIndex = 0;
+    if (e.target.getAttribute("name") === "addLabelBtn") {
+      this.props.addLabelToMessage(true, e.target.value);
+      e.target.selectedIndex = 0;
+    } else {
+      console.log("reached delete in toolvbar");
+      this.props.addLabelToMessage(false, e.target.value);
+      e.target.selectedIndex = 0;
+    }
   };
 
   render() {
@@ -49,6 +55,7 @@ class Toolbar extends Component {
               className="form-control label-select"
               //disabled="disabled"
               onChange={this.handleSelection}
+              name="addLabelBtn"
             >
               <option>Apply label</option>
               <option value="dev">dev</option>
@@ -56,7 +63,12 @@ class Toolbar extends Component {
               <option value="gschool">gschool</option>
             </select>
 
-            <select className="form-control label-select" disabled="disabled">
+            <select
+              className="form-control label-select"
+              //disabled="disabled"
+              onChange={this.handleSelection}
+              name="deleteLabelBtn"
+            >
               <option>Remove label</option>
               <option value="dev">dev</option>
               <option value="personal">personal</option>

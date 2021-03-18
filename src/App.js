@@ -157,17 +157,17 @@ class App extends Component {
     const numberOfUnread = messages.reduce((acc, curr) => {
       return acc + (curr.read === false ? 1 : 0);
     }, 0);
-    console.log("numberOfUnread: ", numberOfUnread);
     return numberOfUnread;
   };
 
-  addLabelToMessage = (param) => {
+  addLabelToMessage = (add = true, param = "") => {
     let messages = [];
     messages = messages.concat(this.state.seedMessages);
     let newArray = [];
     newArray = newArray.concat(
-      messages.map(
-        (m) => {
+      messages.map((m) => {
+        // for adding a label
+        if (add) {
           if (m.selected) {
             if (m.labels.includes(param)) {
               return m;
@@ -175,11 +175,18 @@ class App extends Component {
               return { ...m, labels: [...m.labels, param] };
             }
           }
-          return m;
+          // for deleting a label
+        } else {
+          if (m.selected) {
+            if (m.labels.includes(param)) {
+              return { ...m, labels: m.labels.filter((el) => !(el === param)) };
+            } else {
+              return m;
+            }
+          }
         }
-
-        // m.selected ? { ...m, labels: [...m.labels, param] } : m
-      )
+        return m;
+      })
     );
     console.log("newArray from addLabelToMessage: ", newArray);
     this.setState({ seedMessages: newArray });
