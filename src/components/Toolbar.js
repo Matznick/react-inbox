@@ -12,6 +12,17 @@ class Toolbar extends Component {
     }
   };
 
+  setSelectButtonStyle = () => {
+    console.log(this.props.seedMessages.length);
+    if (this.props.countSelectedMessages() === this.props.seedMessages.length) {
+      return "fa fa-square fa_custom";
+    } else if (this.props.countSelectedMessages() === 0) {
+      return "fa fa-square-o";
+    } else {
+      return "fa fa-square";
+    }
+  };
+
   render() {
     return (
       <div>
@@ -28,13 +39,7 @@ class Toolbar extends Component {
               onClick={this.props.selectMessages.bind(true)}
               className="btn btn-default"
             >
-              <i
-                className={
-                  this.props.allMessagesSelected
-                    ? "fa fa-square"
-                    : "fa fa-square-o"
-                }
-              ></i>
+              <i className={this.setSelectButtonStyle()}></i>
             </button>
 
             <button

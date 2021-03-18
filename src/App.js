@@ -192,6 +192,15 @@ class App extends Component {
     this.setState({ seedMessages: newArray });
   };
 
+  countSelectedMessages = () => {
+    let messages = [];
+    messages = messages.concat(this.state.seedMessages);
+    const numberOfSelected = messages.reduce((acc, curr) => {
+      return acc + (curr.selected === true ? 1 : 0);
+    }, 0);
+    return numberOfSelected;
+  };
+
   render() {
     return (
       <div className="App">
@@ -201,6 +210,8 @@ class App extends Component {
           deleteMessage={this.deleteMessage}
           countUnreadMessages={this.countUnreadMessages}
           addLabelToMessage={this.addLabelToMessage}
+          countSelectedMessages={this.countSelectedMessages}
+          seedMessages={this.state.seedMessages}
         />
         <MessagesList
           seedMessages={this.state.seedMessages}
