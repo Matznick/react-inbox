@@ -76,7 +76,7 @@ class App extends Component {
         labels: [],
       },
     ],
-    allMessagesSelected: false,
+    allMessagesSelected: false, // delete all occurances
   };
 
   selectMessages = (all = false, one_only = false, id = null) => {
@@ -124,14 +124,18 @@ class App extends Component {
     console.log("final_messages", newMessagesArray);
   };
 
-  // markAsRead = () => {
-  //   if (this.state.allMessagesSelected) {
-  //     let readMessages = this.state.seedMessages;
-  //     readMessages.map((m) => (m.read = true));
-  //     this.setState({ seedMessages: readMessages });
-  //     //this.setState({ allMessagesSelected: this.state.allMessagesSelected });
-  //   }
-  // };
+  markAsRead = () => {
+    let readMessages = [];
+    readMessages = readMessages.concat(this.state.seedMessages);
+    // replace all messages that are .selected: true in the array with new messages with their .read: true
+    let newArray = [];
+    newArray = newArray.concat(
+      readMessages.map((m) => (m = m.selected ? (m = { ...m, read: true }) : m))
+    );
+    console.log("newArray: ", newArray);
+
+    this.setState({ seedMessages: newArray });
+  };
 
   render() {
     return (

@@ -24,10 +24,7 @@ class Toolbar extends Component {
               ></i>
             </button>
 
-            <button
-              //   onClick={this.props.markAsRead()}
-              className="btn btn-default"
-            >
+            <button onClick={this.props.markAsRead} className="btn btn-default">
               Mark As Read
             </button>
 
