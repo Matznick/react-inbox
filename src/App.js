@@ -80,7 +80,7 @@ class App extends Component {
 
   selectMessages = (all = false, one_only = false, id = null) => {
     if (one_only) {
-      const found = this.state.seedMessages.find((m) => m.id == id);
+      const found = this.state.seedMessages.find((m) => m.id === id);
       if (found) {
         let readMessages = [];
         readMessages = readMessages.concat(this.state.seedMessages);
@@ -116,8 +116,8 @@ class App extends Component {
 
     let selectedMessages = [];
     selectedMessages = selectedMessages.concat(this.state.seedMessages);
-    const allAreChecked = selectedMessages.every((m) => m.selected == true);
-    const allAreNotChecked = selectedMessages.find((m) => m.selected == false);
+    const allAreChecked = selectedMessages.every((m) => m.selected === true);
+    const allAreNotChecked = selectedMessages.find((m) => m.selected === false);
     let newMessagesArray = selectedMessages.map((m) => {
       if (all && allAreChecked) {
         return { ...m, selected: false };
@@ -161,6 +161,30 @@ class App extends Component {
     return numberOfUnread;
   };
 
+  addLabelToMessage = (param) => {
+    let messages = [];
+    messages = messages.concat(this.state.seedMessages);
+    let newArray = [];
+    newArray = newArray.concat(
+      messages.map(
+        (m) => {
+          if (m.selected) {
+            if (m.labels.includes(param)) {
+              return m;
+            } else {
+              return { ...m, labels: [...m.labels, param] };
+            }
+          }
+          return m;
+        }
+
+        // m.selected ? { ...m, labels: [...m.labels, param] } : m
+      )
+    );
+    console.log("newArray from addLabelToMessage: ", newArray);
+    this.setState({ seedMessages: newArray });
+  };
+
   render() {
     return (
       <div className="App">
@@ -169,6 +193,7 @@ class App extends Component {
           markAsRead={this.markAsRead}
           deleteMessage={this.deleteMessage}
           countUnreadMessages={this.countUnreadMessages}
+          addLabelToMessage={this.addLabelToMessage}
         />
         <MessagesList
           seedMessages={this.state.seedMessages}

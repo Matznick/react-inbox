@@ -1,6 +1,11 @@
 import React, { Component } from "react";
 
 class Toolbar extends Component {
+  handleSelection = (e) => {
+    this.props.addLabelToMessage(e.target.value);
+    e.target.selectedIndex = 0;
+  };
+
   render() {
     return (
       <div>
@@ -40,7 +45,11 @@ class Toolbar extends Component {
               Mark As Unread
             </button>
 
-            <select className="form-control label-select" disabled="disabled">
+            <select
+              className="form-control label-select"
+              //disabled="disabled"
+              onChange={this.handleSelection}
+            >
               <option>Apply label</option>
               <option value="dev">dev</option>
               <option value="personal">personal</option>

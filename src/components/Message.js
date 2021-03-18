@@ -34,6 +34,7 @@ class Message extends Component {
   };
 
   onClickStar = () => this.setState({ starred: !this.state.starred });
+  // noch falsch, muss auch in den state der app
 
   render() {
     return (
@@ -59,7 +60,7 @@ class Message extends Component {
                 ></i>
               </div>
               <div className="col-xs-1">
-                {this.state.labels.map((label, i) => (
+                {this.props.message.labels.map((label, i) => (
                   <div key={i} className="label">
                     {label}
                   </div>
