@@ -71,7 +71,6 @@
 
 .message.selected.unread {
   background: #ffffcc;
-  font-weight: bold;
 }
 
 .message.selected.read {

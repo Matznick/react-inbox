@@ -52,7 +52,11 @@ class Toolbar extends Component {
               <option value="gschool">gschool</option>
             </select>
 
-            <button className="btn btn-default" disabled="disabled">
+            <button
+              onClick={this.props.deleteMessage}
+              className="btn btn-default"
+              //disabled="disabled"
+            >
               <i className="fa fa-trash-o"></i>
             </button>
           </div>

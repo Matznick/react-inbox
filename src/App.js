@@ -131,12 +131,22 @@ class App extends Component {
     this.setState({ seedMessages: newArray });
   };
 
+  deleteMessage = () => {
+    let readMessages = [];
+    readMessages = readMessages.concat(this.state.seedMessages);
+    let newArray = [];
+    newArray = newArray.concat(readMessages.filter((m) => !m.selected));
+    console.log("newArray from delete: ", newArray);
+    this.setState({ seedMessages: newArray });
+  };
+
   render() {
     return (
       <div className="App">
         <Toolbar
           selectMessages={this.selectMessages}
           markAsRead={this.markAsRead}
+          deleteMessage={this.deleteMessage}
         />
         <MessagesList
           seedMessages={this.state.seedMessages}
