@@ -25,7 +25,7 @@ class Message extends Component {
   };
 
   toggleCheckbox = () => {
-    this.props.selectMessages(false, true, this.state.id);
+    this.props.selectMessages(false, true, this.props.message.id);
   };
 
   onClickCheckbox = () => {

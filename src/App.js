@@ -82,23 +82,34 @@ class App extends Component {
     if (one_only) {
       const found = this.state.seedMessages.find((m) => m.id == id);
       if (found) {
-        // grab where we found the target item
-        const the_index = this.state.seedMessages.indexOf(found);
-
-        // make a new array to work on since we don't mutate state on state
-        const new_messages_array = [];
-        const final_messages = new_messages_array.concat(
-          this.state.seedMessages
+        let readMessages = [];
+        readMessages = readMessages.concat(this.state.seedMessages);
+        let newArray = [];
+        newArray = newArray.concat(
+          readMessages.map((m) =>
+            m.id === found.id ? { ...m, selected: !found.selected } : m
+          )
         );
 
-        // construct the new object with the toggle in place
-        const new_message = { ...found, selected: !found.selected };
+        this.setState({ seedMessages: newArray });
 
-        // insert the new object in the array
-        final_messages[the_index] = new_message;
+        // // grab where we found the target item
+        // const the_index = this.state.seedMessages.indexOf(found);
 
-        // update the state to have the new array with the new object.
-        this.setState({ seedMessages: final_messages });
+        // // make a new array to work on since we don't mutate state on state
+        // const new_messages_array = [];
+        // const final_messages = new_messages_array.concat(
+        //   this.state.seedMessages
+        // );
+
+        // // construct the new object with the toggle in place
+        // const new_message = { ...found, selected: !found.selected };
+
+        // // insert the new object in the array
+        // final_messages[the_index] = new_message;
+
+        // // update the state to have the new array with the new object.
+        // this.setState({ seedMessages: final_messages });
       }
       return;
     }
