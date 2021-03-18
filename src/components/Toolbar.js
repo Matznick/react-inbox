@@ -13,15 +13,20 @@ class Toolbar extends Component {
   };
 
   setSelectButtonStyle = () => {
-    console.log(this.props.seedMessages.length);
     if (this.props.countSelectedMessages() === this.props.seedMessages.length) {
+      // all selected
       return "fa fa-square fa_custom";
     } else if (this.props.countSelectedMessages() === 0) {
+      // none selected
       return "fa fa-square-o";
     } else {
+      // some selected
       return "fa fa-square";
     }
   };
+
+  disablingButtons = () =>
+    this.props.countSelectedMessages() === 0 ? true : false;
 
   render() {
     return (
@@ -45,6 +50,7 @@ class Toolbar extends Component {
             <button
               onClick={this.props.markAsRead.bind(this, true)}
               className="btn btn-default"
+              disabled={this.disablingButtons()}
             >
               Mark As Read
             </button>
@@ -52,13 +58,14 @@ class Toolbar extends Component {
             <button
               onClick={this.props.markAsRead.bind(this, false)}
               className="btn btn-default"
+              disabled={this.disablingButtons()}
             >
               Mark As Unread
             </button>
 
             <select
               className="form-control label-select"
-              //disabled="disabled"
+              disabled={this.disablingButtons()}
               onChange={this.handleSelection}
               name="addLabelBtn"
             >
@@ -70,7 +77,7 @@ class Toolbar extends Component {
 
             <select
               className="form-control label-select"
-              //disabled="disabled"
+              disabled={this.disablingButtons()}
               onChange={this.handleSelection}
               name="deleteLabelBtn"
             >
@@ -83,7 +90,7 @@ class Toolbar extends Component {
             <button
               onClick={this.props.deleteMessage}
               className="btn btn-default"
-              //disabled="disabled"
+              disabled={this.disablingButtons()}
             >
               <i className="fa fa-trash-o"></i>
             </button>
