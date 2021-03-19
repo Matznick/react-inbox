@@ -130,6 +130,19 @@ class App extends Component {
     this.setState({ seedMessages: newMessagesArray });
   };
 
+  setStarred = (id) => {
+    let readMessages = [];
+    readMessages = readMessages.concat(this.state.seedMessages);
+    let newArray = [];
+    const foundMessage = this.state.seedMessages.find((m) => m.id === id);
+    newArray = newArray.concat(
+      readMessages.map((m) =>
+        m.id === foundMessage.id ? { ...m, starred: !m.starred } : m
+      )
+    );
+    this.setState({ seedMessages: newArray });
+  };
+
   markAsRead = (param) => {
     console.log("param ", param);
     let readMessages = [];
@@ -216,6 +229,7 @@ class App extends Component {
         <MessagesList
           seedMessages={this.state.seedMessages}
           selectMessages={this.selectMessages}
+          setStarred={this.setStarred}
           key={this.seedMessages}
         />
       </div>

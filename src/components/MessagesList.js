@@ -11,6 +11,7 @@ class MessagesList extends Component {
               key={i}
               message={message}
               selectMessages={this.props.selectMessages}
+              setStarred={this.props.setStarred}
             />
           </div>
         ))}

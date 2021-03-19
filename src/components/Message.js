@@ -33,8 +33,13 @@ class Message extends Component {
     this.setMessageStyle();
   };
 
-  onClickStar = () => this.setState({ starred: !this.state.starred });
-  // noch falsch, muss eigentlich auch in den state der app, ABER: wird für nichts benutzt, deshlab (noch) keine Auswrikung
+  onClickStar = () => {
+    this.props.setStarred(this.state.id);
+    // this.styleStarIcon();‚
+  };
+
+  styleStarIcon = () =>
+    this.props.message.starred ? "star fa fa-star" : "star fa fa-star-o";
 
   render() {
     return (
@@ -52,11 +57,7 @@ class Message extends Component {
               <div className="col-xs-1">
                 <i
                   onClick={this.onClickStar}
-                  className={
-                    this.state.starred === false
-                      ? "star fa fa-star-o"
-                      : "star fa fa-star"
-                  }
+                  className={this.styleStarIcon()}
                 ></i>
               </div>
               <div className="col-xs-1">
