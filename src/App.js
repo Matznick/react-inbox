@@ -5,78 +5,29 @@ import Toolbar from "./components/Toolbar";
 
 class App extends Component {
   state = {
-    seedMessages: [
-      {
-        id: 1,
-        subject:
-          "You can't input the protocol without calculating the mobile RSS protocol!",
-        read: false,
-        starred: true,
-        selected: false,
-        labels: ["dev", "personal"],
-      },
-      {
-        id: 2,
-        subject:
-          "connecting the system won't do anything, we need to input the mobile AI panel!",
-        read: false,
-        starred: false,
-        selected: true,
-        labels: [],
-      },
-      {
-        id: 3,
-        subject:
-          "Use the 1080p HTTP feed, then you can parse the cross-platform hard drive!",
-        read: false,
-        starred: true,
-        selected: false,
-        labels: ["dev"],
-      },
-      {
-        id: 4,
-        subject: "We need to program the primary TCP hard drive!",
-        read: true,
-        starred: false,
-        selected: true,
-        labels: [],
-      },
-      {
-        id: 5,
-        subject:
-          "If we override the interface, we can get to the HTTP feed through the virtual EXE interface!",
-        read: false,
-        starred: false,
-        selected: false,
-        labels: ["personal"],
-      },
-      {
-        id: 6,
-        subject: "We need to back up the wireless GB driver!",
-        read: true,
-        starred: true,
-        selected: false,
-        labels: [],
-      },
-      {
-        id: 7,
-        subject: "We need to index the mobile PCI bus!",
-        read: true,
-        starred: false,
-        selected: false,
-        labels: ["dev", "personal"],
-      },
-      {
-        id: 8,
-        subject:
-          "If we connect the sensor, we can get to the HDD port through the redundant IB firewall!",
-        read: true,
-        starred: true,
-        selected: false,
-        labels: [],
-      },
-    ],
+    seedMessages: [],
   };
+
+  async componentDidMount() {
+    const response_messages = await fetch("http://localhost:8082/api/messages");
+    const json_messages = await response_messages.json();
+    this.setState({ seedMessages: json_messages });
+  }
+
+  // postMessagesToServer = async (messagesAray) => {
+  //   const response = await fetch("http://localhost:8082/api/messages", {
+  //     method: "PATCH",
+  //     body: JSON.stringify(messagesAray),
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //       Accept: "application/json",
+  //     },
+  //   });
+  //   const postedMesssages = await response.json();
+  //   console.log("postedmessages ", postedMesssages);
+  //   const newList = [].concat(postedMesssages);
+  //   this.setState({ seedMessages: newList });
+  // };
 
   selectMessages = (all = false, one_only = false, id = null) => {
     if (one_only) {
@@ -140,6 +91,7 @@ class App extends Component {
         m.id === foundMessage.id ? { ...m, starred: !m.starred } : m
       )
     );
+    console.log("from starred, newArray: ", newArray);
     this.setState({ seedMessages: newArray });
   };
 
@@ -159,9 +111,33 @@ class App extends Component {
     let messages = [];
     messages = messages.concat(this.state.seedMessages);
     let newArray = [];
-    newArray = newArray.concat(messages.filter((m) => !m.selected));
+    // newArray = newArray.concat(messages.filter((m) => !m.selected));
+    newArray = newArray.concat(messages.filter((m) => m.selected));
     console.log("newArray from delete: ", newArray);
-    this.setState({ seedMessages: newArray });
+    const idsToDelete = newArray.map((el) => el.id);
+    console.log("idsToDelete: ", idsToDelete);
+    idsToDelete.forEach((id) => this.deleteMessageOnServer(id));
+    //this.setState({ seedMessages: newArray });
+  };
+
+  deleteMessageOnServer = async (id) => {
+    // let messages = [];
+    // messages = messages.concat(this.state.seedMessages);
+    // let newArray = [];
+    // newArray = newArray.concat(messages.filter((m) => !m.selected));
+    // const idsToDelete = newArray.map((el) => el.id);
+    // console.log("idsToDelete from delete: ", idsToDelete);
+    const deletebody = { command: "delete" };
+    const response = await fetch("http://localhost:8082/api/messages/" + id, {
+      method: "PATCH",
+      body: JSON.stringify(deletebody),
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    });
+    console.log("delete response: ", response);
+    console.log("deletedMessadeID ", id);
   };
 
   countUnreadMessages = () => {
