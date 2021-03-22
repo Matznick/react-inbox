@@ -101,6 +101,7 @@ class App extends Component {
     });
     console.log("starred response: ", response);
     await this.loadMessagesFromServer();
+    this.applyCurrentSelection([id]);
   };
 
   markAsRead = async (param) => {
