@@ -9,25 +9,31 @@ class App extends Component {
   };
 
   async componentDidMount() {
-    const response_messages = await fetch("http://localhost:8082/api/messages");
-    const json_messages = await response_messages.json();
-    this.setState({ seedMessages: json_messages });
+    this.loadMessagesFromServer();
   }
 
-  // postMessagesToServer = async (messagesAray) => {
-  //   const response = await fetch("http://localhost:8082/api/messages", {
-  //     method: "PATCH",
-  //     body: JSON.stringify(messagesAray),
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //       Accept: "application/json",
-  //     },
-  //   });
-  //   const postedMesssages = await response.json();
-  //   console.log("postedmessages ", postedMesssages);
-  //   const newList = [].concat(postedMesssages);
-  //   this.setState({ seedMessages: newList });
-  // };
+  loadMessagesFromServer = async () => {
+    const response_messages = await fetch("http://localhost:8082/api/messages");
+    let json_messages = await response_messages.json();
+    // // clean messages from selected state, as it shouldnt be persisted server-side
+    // let cleanedMessages = [];
+    // cleanedMessages = cleanedMessages.concat(json_messages);
+    // cleanedMessages.forEach((el) => delete el.selected);
+    // console.log("cleaned json_messages: ", cleanedMessages);
+    this.setState({ seedMessages: json_messages });
+  };
+
+  getSelectedMessageIds = () => {
+    let messages = [];
+    messages = messages.concat(this.state.seedMessages);
+    let updatedMessages = [];
+    updatedMessages = updatedMessages.concat(
+      messages.filter((m) => m.selected)
+    );
+    const selectedIds = updatedMessages.map((el) => el.id);
+    console.log("selected Ids: ", selectedIds);
+    return selectedIds;
+  };
 
   selectMessages = (all = false, one_only = false, id = null) => {
     if (one_only) {
@@ -81,54 +87,67 @@ class App extends Component {
     this.setState({ seedMessages: newMessagesArray });
   };
 
-  setStarred = (id) => {
-    let readMessages = [];
-    readMessages = readMessages.concat(this.state.seedMessages);
-    let newArray = [];
-    const foundMessage = this.state.seedMessages.find((m) => m.id === id);
-    newArray = newArray.concat(
-      readMessages.map((m) =>
-        m.id === foundMessage.id ? { ...m, starred: !m.starred } : m
-      )
-    );
-    console.log("from starred, newArray: ", newArray);
-    this.setState({ seedMessages: newArray });
+  setStarred = async (id) => {
+    const setStarredBody = { messageIds: [id], command: "star" };
+    const response = await fetch("http://localhost:8082/api/messages", {
+      method: "PATCH",
+      body: JSON.stringify(setStarredBody),
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    });
+    console.log("starred response: ", response);
+    await this.loadMessagesFromServer();
   };
 
-  markAsRead = (param) => {
-    console.log("param ", param);
-    let readMessages = [];
-    readMessages = readMessages.concat(this.state.seedMessages);
-    let newArray = [];
-    newArray = newArray.concat(
-      readMessages.map((m) => (m.selected ? { ...m, read: param } : m))
-    );
-
-    this.setState({ seedMessages: newArray });
+  markAsRead = async (param) => {
+    const idsToMarkAsRead = this.getSelectedMessageIds();
+    const markAsReadBody = {
+      messageIds: idsToMarkAsRead,
+      command: "read",
+      read: param,
+    };
+    const response = await fetch("http://localhost:8082/api/messages", {
+      method: "PATCH",
+      body: JSON.stringify(markAsReadBody),
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    });
+    console.log("markAsRead response: ", response);
+    await this.loadMessagesFromServer();
+    this.applyCurrentSelection(idsToMarkAsRead);
   };
 
-  deleteMessage = () => {
+  applyCurrentSelection = (ids) => {
+    let currSelectedArray = [];
+    currSelectedArray = currSelectedArray.concat(this.state.seedMessages);
+    currSelectedArray.map((el) =>
+      ids.includes(el.id) ? (el.selected = true) : (el.selected = false)
+    );
+    this.setState({ seedMessages: currSelectedArray });
+  };
+
+  deleteMessageOnServer = async () => {
     let messages = [];
     messages = messages.concat(this.state.seedMessages);
-    let newArray = [];
-    // newArray = newArray.concat(messages.filter((m) => !m.selected));
-    newArray = newArray.concat(messages.filter((m) => m.selected));
-    console.log("newArray from delete: ", newArray);
-    const idsToDelete = newArray.map((el) => el.id);
-    console.log("idsToDelete: ", idsToDelete);
-    idsToDelete.forEach((id) => this.deleteMessageOnServer(id));
-    //this.setState({ seedMessages: newArray });
-  };
+    let messagesToDelete = [];
+    messagesToDelete = messagesToDelete.concat(
+      messages.filter((m) => m.selected)
+    );
+    let messagesToKeep = [];
+    messagesToKeep = messagesToKeep.concat(messages.filter((m) => !m.selected));
+    const idsToDelete = this.getSelectedMessageIds();
+    console.log("messagesToDelete: ", messagesToDelete);
+    console.log("messages: ", messages);
+    console.log("idsToDelete from delete: ", idsToDelete);
 
-  deleteMessageOnServer = async (id) => {
-    // let messages = [];
-    // messages = messages.concat(this.state.seedMessages);
-    // let newArray = [];
-    // newArray = newArray.concat(messages.filter((m) => !m.selected));
-    // const idsToDelete = newArray.map((el) => el.id);
-    // console.log("idsToDelete from delete: ", idsToDelete);
-    const deletebody = { command: "delete" };
-    const response = await fetch("http://localhost:8082/api/messages/" + id, {
+    console.log("messagesToKeep: ", messagesToKeep);
+    const deletebody = { messageIds: idsToDelete, command: "delete" };
+    console.log("deletebody: ", deletebody);
+    const response = await fetch("http://localhost:8082/api/messages", {
       method: "PATCH",
       body: JSON.stringify(deletebody),
       headers: {
@@ -137,7 +156,7 @@ class App extends Component {
       },
     });
     console.log("delete response: ", response);
-    console.log("deletedMessadeID ", id);
+    await this.loadMessagesFromServer();
   };
 
   countUnreadMessages = () => {
@@ -149,36 +168,36 @@ class App extends Component {
     return numberOfUnread;
   };
 
-  addLabelToMessage = (add = true, param = "") => {
-    let messages = [];
-    messages = messages.concat(this.state.seedMessages);
-    let newArray = [];
-    newArray = newArray.concat(
-      messages.map((m) => {
-        // for adding a label
-        if (add) {
-          if (m.selected) {
-            if (m.labels.includes(param)) {
-              return m;
-            } else {
-              return { ...m, labels: [...m.labels, param] };
-            }
-          }
-          // for deleting a label
-        } else {
-          if (m.selected) {
-            if (m.labels.includes(param)) {
-              return { ...m, labels: m.labels.filter((el) => !(el === param)) };
-            } else {
-              return m;
-            }
-          }
-        }
-        return m;
-      })
-    );
-    console.log("newArray from addLabelToMessage: ", newArray);
-    this.setState({ seedMessages: newArray });
+  changeLabelOnServer = async (add, param) => {
+    const idsToChangeLabel = this.getSelectedMessageIds();
+    console.log("idsToAddLabel: ", idsToChangeLabel);
+    let changeLabelBody = {};
+    if (add) {
+      changeLabelBody = {
+        messageIds: idsToChangeLabel,
+        command: "addLabel",
+        label: param,
+      };
+    } else {
+      changeLabelBody = {
+        messageIds: idsToChangeLabel,
+        command: "removeLabel",
+        label: param,
+      };
+    }
+    console.log(changeLabelBody);
+    const response = await fetch("http://localhost:8082/api/messages", {
+      method: "PATCH",
+      body: JSON.stringify(changeLabelBody),
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    });
+    console.log("addLabel response: ", response);
+    // this.setState({ seedMessages: updatedMessages });
+    await this.loadMessagesFromServer();
+    this.applyCurrentSelection(idsToChangeLabel);
   };
 
   countSelectedMessages = () => {
@@ -196,9 +215,9 @@ class App extends Component {
         <Toolbar
           selectMessages={this.selectMessages}
           markAsRead={this.markAsRead}
-          deleteMessage={this.deleteMessage}
+          deleteMessageOnServer={this.deleteMessageOnServer}
           countUnreadMessages={this.countUnreadMessages}
-          addLabelToMessage={this.addLabelToMessage}
+          changeLabelOnServer={this.changeLabelOnServer}
           countSelectedMessages={this.countSelectedMessages}
           seedMessages={this.state.seedMessages}
         />

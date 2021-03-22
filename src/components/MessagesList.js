@@ -6,9 +6,8 @@ class MessagesList extends Component {
     return (
       <div>
         {this.props.seedMessages.map((message, i) => (
-          <div>
+          <div key={i}>
             <Message
-              key={i}
               message={message}
               selectMessages={this.props.selectMessages}
               setStarred={this.props.setStarred}

@@ -3,11 +3,11 @@ import React, { Component } from "react";
 class Toolbar extends Component {
   handleSelection = (e) => {
     if (e.target.getAttribute("name") === "addLabelBtn") {
-      this.props.addLabelToMessage(true, e.target.value);
+      console.log(e.target.value);
+      this.props.changeLabelOnServer(true, e.target.value);
       e.target.selectedIndex = 0;
     } else {
-      console.log("reached delete in toolvbar");
-      this.props.addLabelToMessage(false, e.target.value);
+      this.props.changeLabelOnServer(false, e.target.value);
       e.target.selectedIndex = 0;
     }
   };
@@ -87,7 +87,7 @@ class Toolbar extends Component {
           </select>
 
           <button
-            onClick={this.props.deleteMessage}
+            onClick={this.props.deleteMessageOnServer}
             className="btn btn-default"
             disabled={this.disablingButtons()}
           >
