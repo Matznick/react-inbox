@@ -138,6 +138,9 @@ footer.spacer {
   color: #ffffcc;
 }
 
+.hidden {
+  display: none;
+}
 
 
 

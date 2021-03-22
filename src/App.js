@@ -2,10 +2,12 @@ import "./App.css";
 import { Component } from "react";
 import MessagesList from "./components/MessagesList";
 import Toolbar from "./components/Toolbar";
+import ComposeForm from "./components/ComposeForm";
 
 class App extends Component {
   state = {
     seedMessages: [],
+    showComposeForm: "message-container hidden",
   };
 
   async componentDidMount() {
@@ -198,6 +200,34 @@ class App extends Component {
     return numberOfSelected;
   };
 
+  toggleComposeForm = () => {
+    let classNameString =
+      this.state.showComposeForm === "message-container"
+        ? "message-container hidden"
+        : "message-container";
+    this.setState({ showComposeForm: classNameString });
+    return classNameString;
+  };
+
+  postNewMessage = async (messageValues) => {
+    const postNewMessageBody = {
+      command: "post",
+      subject: messageValues.subject,
+      body: messageValues.body,
+    };
+    console.log(postNewMessageBody);
+    const response = await fetch("http://localhost:8082/api/messages", {
+      method: "POST",
+      body: JSON.stringify(postNewMessageBody),
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    });
+    console.log("postNewMessage response: ", response);
+    await this.loadMessagesFromServer();
+  };
+
   render() {
     return (
       <div className="App">
@@ -209,6 +239,12 @@ class App extends Component {
           changeLabelOnServer={this.changeLabelOnServer}
           countSelectedMessages={this.countSelectedMessages}
           seedMessages={this.state.seedMessages}
+          toggleComposeForm={this.toggleComposeForm}
+        />
+        <ComposeForm
+          showComposeForm={this.state.showComposeForm}
+          key={this.state.showComposeForm}
+          postNewMessage={this.postNewMessage}
         />
         <MessagesList
           seedMessages={this.state.seedMessages}
