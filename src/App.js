@@ -211,6 +211,7 @@ class App extends Component {
   };
 
   postNewMessage = async (messageValues) => {
+    const selectedMessagesIds = this.getSelectedMessageIds();
     const postNewMessageBody = {
       command: "post",
       subject: messageValues.subject,
@@ -227,6 +228,7 @@ class App extends Component {
     });
     console.log("postNewMessage response: ", response);
     await this.loadMessagesFromServer();
+    this.applyCurrentSelection(selectedMessagesIds);
   };
 
   render() {
