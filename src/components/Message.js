@@ -35,7 +35,6 @@ class Message extends Component {
 
   onClickStar = () => {
     this.props.setStarred(this.state.id);
-    // this.styleStarIcon();‚
   };
 
   styleStarIcon = () =>

@@ -15,12 +15,12 @@ class App extends Component {
   loadMessagesFromServer = async () => {
     const response_messages = await fetch("http://localhost:8082/api/messages");
     let json_messages = await response_messages.json();
-    // // clean messages from selected state, as it shouldnt be persisted server-side
-    // let cleanedMessages = [];
-    // cleanedMessages = cleanedMessages.concat(json_messages);
-    // cleanedMessages.forEach((el) => delete el.selected);
-    // console.log("cleaned json_messages: ", cleanedMessages);
-    this.setState({ seedMessages: json_messages });
+    // clean messages from selected state, as it shouldnt be persisted server-side
+    let cleanedMessages = [];
+    cleanedMessages = cleanedMessages.concat(json_messages);
+    cleanedMessages.forEach((el) => delete el.selected);
+    console.log("cleaned json_messages: ", cleanedMessages);
+    this.setState({ seedMessages: cleanedMessages });
   };
 
   getSelectedMessageIds = () => {
@@ -131,25 +131,14 @@ class App extends Component {
   };
 
   deleteMessageOnServer = async () => {
-    let messages = [];
-    messages = messages.concat(this.state.seedMessages);
-    let messagesToDelete = [];
-    messagesToDelete = messagesToDelete.concat(
-      messages.filter((m) => m.selected)
-    );
-    let messagesToKeep = [];
-    messagesToKeep = messagesToKeep.concat(messages.filter((m) => !m.selected));
     const idsToDelete = this.getSelectedMessageIds();
-    console.log("messagesToDelete: ", messagesToDelete);
-    console.log("messages: ", messages);
     console.log("idsToDelete from delete: ", idsToDelete);
 
-    console.log("messagesToKeep: ", messagesToKeep);
-    const deletebody = { messageIds: idsToDelete, command: "delete" };
-    console.log("deletebody: ", deletebody);
+    const deleteBody = { messageIds: idsToDelete, command: "delete" };
+    console.log("deletebody: ", deleteBody);
     const response = await fetch("http://localhost:8082/api/messages", {
       method: "PATCH",
-      body: JSON.stringify(deletebody),
+      body: JSON.stringify(deleteBody),
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",

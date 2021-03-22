@@ -6,7 +6,7 @@ class MessagesList extends Component {
     return (
       <div>
         {this.props.seedMessages.map((message, i) => (
-          <div key={i}>
+          <div key={message.id}>
             <Message
               message={message}
               selectMessages={this.props.selectMessages}
